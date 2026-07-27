@@ -1,127 +1,108 @@
 # 🏠 House Price Predictor
 
-An end-to-end machine learning project that predicts median house values using the **California Housing dataset**.
+An end-to-end machine learning project that predicts median house values in California using geographical, demographic, and housing-related information.
 
-This project demonstrates the complete workflow of building a production-ready machine learning application:
+This project demonstrates the complete machine learning workflow—from data exploration and model training to API development, Dockerization, automated testing, and cloud deployment.
+
+---
+
+## Project Overview
+
+The goal of this project is to build a reliable regression model that estimates house prices using the **California Housing dataset**.
+
+Two machine learning models are compared:
+
+* **Linear Regression** — used as a simple baseline model
+* **Random Forest Regressor** — used to capture more complex relationships in the data
+
+The best-performing model is saved and served through a **FastAPI REST API**, allowing other applications to request predictions.
+
+---
+
+## Machine Learning Workflow
 
 ```text
-Data → Preprocessing → Model Training → Evaluation
-     → Model Saving → FastAPI → Docker → Testing → Deployment
-```
-
-The project begins with a **Linear Regression** baseline and then uses a **Random Forest Regressor** to improve prediction performance.
-
----
-
-## 📌 Project Overview
-
-Predicting house prices is a common regression problem in machine learning.
-
-The objective of this project is to train a model that learns the relationship between housing-related features and the median house value in a particular California district.
-
-The project is not limited to training a model inside a notebook. It also demonstrates how to:
-
-* organize a machine learning repository,
-* create a reusable training pipeline,
-* save and load a trained model,
-* expose predictions through a REST API,
-* validate user input,
-* test the application,
-* package the application using Docker,
-* automate testing using GitHub Actions,
-* and deploy the model as an online service.
-
----
-
-## 🎯 Project Objective
-
-The main objective is to predict the median house value using information such as:
-
-* median income,
-* average house age,
-* average number of rooms,
-* average number of bedrooms,
-* population,
-* average household occupancy,
-* latitude,
-* longitude.
-
-This is a **supervised regression problem** because:
-
-* the dataset contains input features,
-* the correct house value is available during training,
-* and the model predicts a continuous numerical value.
-
----
-
-## 🧠 Machine Learning Workflow
-
-The complete workflow followed in this project is:
-
-```text
-1. Load the California Housing dataset
-2. Explore and understand the data
-3. Separate input features and target
-4. Split the data into training and testing sets
-5. Train a Linear Regression baseline
-6. Train a Random Forest Regressor
-7. Compare model performance
-8. Select the best-performing model
-9. Save the trained model using Joblib
-10. Load the model inside a FastAPI application
-11. Accept house information through an API
-12. Return the predicted house value
-13. Test and containerize the application
+Dataset
+   ↓
+Data exploration and preprocessing
+   ↓
+Train Linear Regression
+   ↓
+Train Random Forest
+   ↓
+Evaluate and compare models
+   ↓
+Save the best model
+   ↓
+Serve predictions with FastAPI
+   ↓
+Package the application with Docker
+   ↓
+Test and deploy
 ```
 
 ---
 
-## 📊 Dataset
+## Dataset
 
-This project uses the **California Housing dataset** available through Scikit-learn.
+The project uses the California Housing dataset available through Scikit-learn.
 
-The dataset contains information collected from different California housing districts.
+The dataset contains information such as:
 
-### Input features
+* Median household income
+* Average house age
+* Average number of rooms
+* Average number of bedrooms
+* Population
+* Average household occupancy
+* Latitude
+* Longitude
 
-| Feature      | Description                              |
-| ------------ | ---------------------------------------- |
-| `MedInc`     | Median income in the district            |
-| `HouseAge`   | Median age of houses in the district     |
-| `AveRooms`   | Average number of rooms per household    |
-| `AveBedrms`  | Average number of bedrooms per household |
-| `Population` | Population of the district               |
-| `AveOccup`   | Average number of people per household   |
-| `Latitude`   | Geographical latitude                    |
-| `Longitude`  | Geographical longitude                   |
-
-### Target variable
-
-| Target        | Description                         |
-| ------------- | ----------------------------------- |
-| `MedHouseVal` | Median house value for the district |
-
-The dataset can be loaded directly using Scikit-learn:
-
-```python
-from sklearn.datasets import fetch_california_housing
-
-housing = fetch_california_housing(as_frame=True)
-df = housing.frame
-```
+The target variable is the median house value for each California district.
 
 ---
 
-## 🏗️ Project Structure
+## Model Evaluation
+
+The models are evaluated using:
+
+| Metric   | Meaning                                          |
+| -------- | ------------------------------------------------ |
+| MAE      | Average absolute prediction error                |
+| RMSE     | Gives more importance to large prediction errors |
+| R² Score | Measures how much variation the model explains   |
+
+The model with the best overall performance is saved using `joblib`.
+
+---
+
+## Technologies Used
+
+* Python
+* Pandas
+* NumPy
+* Scikit-learn
+* Matplotlib
+* Joblib
+* FastAPI
+* Pydantic
+* Uvicorn
+* Pytest
+* Docker
+* GitHub Actions
+
+---
+
+## Project Structure
 
 ```text
 house-price-predictor/
 │
 ├── app/
-│   └── main.py
+│   └── main.py              # FastAPI application
 │
 ├── data/
-│   └── README.md
+│   └── README.md            # Dataset information
 │
 ├── models/
 │   └── house_price_model.joblib
@@ -130,197 +111,51 @@ house-price-predictor/
 │   └── model_experiment.ipynb
 │
 ├── src/
-│   ├── train.py
-│   └── predict.py
+│   ├── train.py             # Model training
+│   └── predict.py           # Local prediction test
 │
 ├── tests/
-│   └── test_api.py
+│   └── test_api.py          # API tests
 │
 ├── .github/
 │   └── workflows/
-│       └── ci.yml
+│       └── ci.yml           # Automated testing
 │
 ├── .gitignore
 ├── Dockerfile
 ├── LICENSE
-├── README.md
-└── requirements.txt
-```
-
-### Folder explanation
-
-| Folder/File          | Purpose                                         |
-| -------------------- | ----------------------------------------------- |
-| `app/`               | Contains the FastAPI application                |
-| `data/`              | Stores local dataset-related files              |
-| `models/`            | Stores the trained machine learning model       |
-| `notebooks/`         | Contains experiments and exploratory analysis   |
-| `src/`               | Contains training and prediction scripts        |
-| `tests/`             | Contains automated tests                        |
-| `.github/workflows/` | Contains the GitHub Actions CI workflow         |
-| `Dockerfile`         | Defines the Docker container                    |
-| `requirements.txt`   | Lists required Python packages                  |
-| `.gitignore`         | Prevents unnecessary files from being committed |
-| `LICENSE`            | Defines how the project may be reused           |
-
----
-
-## 🤖 Models
-
-Two machine learning models are compared in this project.
-
-### 1. Linear Regression
-
-Linear Regression is used as the baseline model.
-
-It attempts to learn a linear relationship between the housing features and the target value.
-
-Advantages:
-
-* simple,
-* fast to train,
-* easy to interpret,
-* useful as a baseline.
-
-Limitations:
-
-* assumes mostly linear relationships,
-* may not capture complex patterns,
-* can be sensitive to unusual values.
-
-### 2. Random Forest Regressor
-
-Random Forest is an ensemble learning algorithm that combines predictions from multiple decision trees.
-
-Advantages:
-
-* captures nonlinear relationships,
-* handles feature interactions,
-* usually performs well on tabular data,
-* requires less feature scaling,
-* is more flexible than Linear Regression.
-
-Limitations:
-
-* larger model size,
-* slower than Linear Regression,
-* less directly interpretable.
-
----
-
-## 📏 Evaluation Metrics
-
-The models are evaluated using the following regression metrics.
-
-### Mean Absolute Error — MAE
-
-MAE calculates the average absolute difference between the actual and predicted values.
-
-```text
-Lower MAE = Better model
-```
-
-MAE is easy to understand because it measures the average prediction error.
-
-### Root Mean Squared Error — RMSE
-
-RMSE gives more importance to large errors because the errors are squared before averaging.
-
-```text
-Lower RMSE = Better model
-```
-
-RMSE is useful when large prediction mistakes should be penalized more strongly.
-
-### R² Score
-
-The R² score measures how much of the target variation is explained by the model.
-
-```text
-R² close to 1 = Strong model performance
-R² close to 0 = Weak explanatory performance
-R² below 0    = Worse than predicting the average
+├── requirements.txt
+└── README.md
 ```
 
 ---
 
-## 📈 Model Results
-
-The final results will be added after training both models.
-
-| Model             |         MAE |        RMSE |          R² |
-| ----------------- | ----------: | ----------: | ----------: |
-| Linear Regression | To be added | To be added | To be added |
-| Random Forest     | To be added | To be added | To be added |
-
-The model with the best testing performance will be saved and used by the FastAPI application.
-
-> Important: The testing dataset must not be used during model training.
-
----
-
-## 🛠️ Technologies Used
-
-* Python
-* Pandas
-* NumPy
-* Scikit-learn
-* Joblib
-* FastAPI
-* Pydantic
-* Uvicorn
-* Pytest
-* Docker
-* Git and GitHub
-* GitHub Actions
-
----
-
-## ⚙️ Installation
+## Installation
 
 ### 1. Clone the repository
 
 ```bash
 git clone https://github.com/YOUR_USERNAME/house-price-predictor.git
-```
-
-Move into the project folder:
-
-```bash
 cd house-price-predictor
 ```
 
-Replace `YOUR_USERNAME` with your GitHub username.
-
----
-
 ### 2. Create a virtual environment
-
-#### Windows
 
 ```bash
 python -m venv .venv
 ```
 
-Activate it:
+Activate it on Windows:
 
 ```bash
 .venv\Scripts\activate
 ```
 
-#### macOS or Linux
-
-```bash
-python3 -m venv .venv
-```
-
-Activate it:
+Activate it on Linux or macOS:
 
 ```bash
 source .venv/bin/activate
 ```
-
----
 
 ### 3. Install dependencies
 
@@ -330,112 +165,47 @@ pip install -r requirements.txt
 
 ---
 
-## 🚂 Train the Model
+## Train the Model
 
-Run the training script from the project root:
+Run the training script:
 
 ```bash
 python src/train.py
 ```
 
-The training script will:
+The script will:
 
-1. load the dataset,
-2. split the data,
-3. train the models,
-4. evaluate their performance,
-5. select the best model,
-6. save the selected model.
-
-The trained model will be stored at:
-
-```text
-models/house_price_model.joblib
-```
+1. Load the dataset
+2. Split it into training and testing data
+3. Train the models
+4. Evaluate their performance
+5. Save the best model inside the `models/` folder
 
 ---
 
-## 🔮 Test the Saved Model
-
-After training, test the saved model using:
-
-```bash
-python src/predict.py
-```
-
-This script loads the model and makes a prediction using example housing values.
-
-This confirms that the saved model can be loaded correctly before it is connected to the API.
-
----
-
-## 🚀 Run the FastAPI Application
-
-Start the API using:
+## Run the FastAPI Application
 
 ```bash
 uvicorn app.main:app --reload
 ```
 
-The application will run at:
-
-```text
-http://127.0.0.1:8000
-```
-
-Open the automatic API documentation:
+Open the interactive API documentation:
 
 ```text
 http://127.0.0.1:8000/docs
 ```
 
-The `/docs` page allows you to test the prediction endpoint directly from the browser.
-
 ---
 
-## 🔌 API Endpoints
+## Prediction Endpoint
 
-### Home endpoint
+### Endpoint
 
-```http
-GET /
-```
-
-Example response:
-
-```json
-{
-  "message": "House Price Predictor API is running"
-}
-```
-
----
-
-### Health endpoint
-
-```http
-GET /health
-```
-
-Example response:
-
-```json
-{
-  "status": "healthy"
-}
-```
-
-The health endpoint confirms that the application is running.
-
----
-
-### Prediction endpoint
-
-```http
+```text
 POST /predict
 ```
 
-Example request:
+### Example request
 
 ```json
 {
@@ -450,7 +220,7 @@ Example request:
 }
 ```
 
-Example response:
+### Example response
 
 ```json
 {
@@ -458,35 +228,9 @@ Example response:
 }
 ```
 
-The exact value depends on the trained model.
-
 ---
 
-## ✅ Input Validation
-
-The API uses Pydantic models to validate incoming data.
-
-Validation helps prevent incorrect input such as:
-
-```json
-{
-  "median_income": "unknown",
-  "house_age": -50
-}
-```
-
-The API checks whether:
-
-* required fields are present,
-* numerical values use the correct data type,
-* values follow defined limits,
-* invalid requests are rejected before reaching the model.
-
----
-
-## 🧪 Run Tests
-
-Run the automated tests using:
+## Run Tests
 
 ```bash
 pytest
@@ -494,25 +238,22 @@ pytest
 
 The tests verify that:
 
-* the application starts,
-* the health endpoint works,
-* the prediction endpoint accepts valid input,
-* a prediction is returned,
-* invalid input is rejected correctly.
+* The API is running correctly
+* The health endpoint responds successfully
+* The prediction endpoint accepts valid input
+* The model returns a prediction
 
 ---
 
-## 🐳 Docker
+## Run with Docker
 
-Docker packages the application, dependencies, and trained model into a portable container.
-
-### Build the Docker image
+Build the Docker image:
 
 ```bash
 docker build -t house-price-predictor .
 ```
 
-### Run the Docker container
+Run the container:
 
 ```bash
 docker run -p 8000:8000 house-price-predictor
@@ -524,135 +265,47 @@ Open:
 http://localhost:8000/docs
 ```
 
-The application should behave the same way inside Docker as it does in the local Python environment.
+---
+
+## Future Improvements
+
+* Add advanced hyperparameter tuning
+* Track experiments using MLflow
+* Add model explainability using SHAP
+* Create a simple web interface
+* Add data and model validation
+* Deploy the API to a cloud platform
+* Monitor model performance after deployment
 
 ---
 
-## 🔄 Continuous Integration
+## Learning Outcomes
 
-GitHub Actions will automatically run the project tests whenever code is pushed to the repository.
+This project demonstrates practical knowledge of:
 
-The CI workflow performs steps such as:
-
-```text
-Push code to GitHub
-        ↓
-Create Python environment
-        ↓
-Install dependencies
-        ↓
-Run automated tests
-        ↓
-Report pass or failure
-```
-
-This helps detect problems before changes are deployed.
+* Regression modelling
+* Model comparison and evaluation
+* Saving and loading trained models
+* Building REST APIs for machine learning
+* Input validation
+* Automated testing
+* Docker containerization
+* Git and GitHub workflow
+* CI/CD fundamentals
+* Cloud deployment
 
 ---
 
-## ☁️ Deployment
-
-The API can later be deployed using a cloud platform that supports Python or Docker applications.
-
-The deployed application will allow users or other applications to send house information and receive predictions through an online API.
-
-Deployment steps will be added after the local API, tests, and Docker container are working correctly.
-
----
-
-## 🗺️ Development Roadmap
-
-* [x] Create GitHub repository
-* [x] Add README, `.gitignore`, and MIT License
-* [ ] Create local project structure
-* [ ] Set up Python virtual environment
-* [ ] Create exploratory notebook
-* [ ] Train Linear Regression model
-* [ ] Train Random Forest model
-* [ ] Compare model performance
-* [ ] Save the best model
-* [ ] Create local prediction script
-* [ ] Build FastAPI application
-* [ ] Add input validation
-* [ ] Add automated tests
-* [ ] Create Docker image
-* [ ] Add GitHub Actions
-* [ ] Deploy the application
-* [ ] Add final model metrics
-* [ ] Add API screenshots
-
----
-
-## 💡 What This Project Demonstrates
-
-This repository demonstrates practical knowledge of:
-
-* supervised machine learning,
-* regression modelling,
-* model comparison,
-* data preprocessing,
-* model serialization,
-* REST API development,
-* API input validation,
-* software testing,
-* containerization,
-* version control,
-* continuous integration,
-* machine learning deployment.
-
----
-
-## ⚠️ Limitations
-
-* The model is trained on historical California housing data.
-* Predictions should not be treated as professional property valuations.
-* The model may not generalize to houses outside the dataset’s geographical and historical context.
-* Prediction quality depends on data quality and feature availability.
-* The project is intended for educational and portfolio purposes.
-
----
-
-## 🔮 Future Improvements
-
-Possible future improvements include:
-
-* hyperparameter tuning,
-* cross-validation,
-* additional regression algorithms,
-* feature importance analysis,
-* SHAP explainability,
-* model monitoring,
-* experiment tracking,
-* data validation,
-* a web-based user interface,
-* automatic cloud deployment,
-* retraining pipelines.
-
----
-
-## 📄 License
+## License
 
 This project is licensed under the MIT License.
 
-You may use, modify, and distribute the code while preserving the original license notice.
-
-See the `LICENSE` file for complete details.
+You may use, modify, and distribute the code while keeping the original license notice.
 
 ---
 
-## 👤 Author
+## Author
 
-**Your Name**
+**Mayur Jadhav**
 
-Machine Learning and AI Engineering Enthusiast
-
-GitHub: `https://github.com/YOUR_USERNAME`
-
----
-
-## ⭐ Support
-
-If this project is useful, consider giving the repository a star.
-
-Contributions, suggestions, and improvements are welcome.
-****
+Master’s student in AI Engineering of Autonomous Systems, interested in machine learning, autonomous systems, simulation, and production-ready AI applications.
