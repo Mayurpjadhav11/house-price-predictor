@@ -135,7 +135,7 @@ house-price-predictor/
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/house-price-predictor.git
+git clone https://github.com/Mayurjadhav11/house-price-predictor.git
 cd house-price-predictor
 ```
 
@@ -145,11 +145,6 @@ cd house-price-predictor
 python -m venv .venv
 ```
 
-Activate it on Windows:
-
-```bash
-.venv\Scripts\activate
-```
 
 Activate it on Linux or macOS:
 
