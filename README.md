@@ -168,13 +168,7 @@ Run the training script:
 python src/train.py
 ```
 
-The script will:
 
-1. Load the dataset
-2. Split it into training and testing data
-3. Train the models
-4. Evaluate their performance
-5. Save the best model inside the `models/` folder
 
 ---
 
